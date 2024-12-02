@@ -26,13 +26,13 @@ class DbHelper {
     return _dbHelper;
   }
   // Database entry point
-  static Database _db;
+  static Database? _db;
 
   Future<Database> get db async {
     if (_db == null) {
-    _db = await initializeDb();
+      _db = await initializeDb();
     }
-    return _db;
+    return _db!;
   }
  // Initialize the database
   Future<Database> initializeDb() async {
@@ -67,7 +67,8 @@ class DbHelper {
   Future<List> getDocs() async {
     Database db = await this.db;
     var r = await db.rawQuery(
-      "SELECT * FROM $tblDocs ORDER BY $docExpiration ASC");
+      "SELECT * FROM $tblDocs ORDER BY $docExpiration ASC"
+    );
     return r;
   }
 
@@ -75,7 +76,8 @@ class DbHelper {
   Future<List> getDoc(int id) async {
     Database db = await this.db;
     var r = await db.rawQuery(
-      "SELECT * FROM $tblDocs WHERE $docId = $id" );
+      "SELECT * FROM $tblDocs WHERE $docId = $id"
+    );
     return r;
     }
     // Gets a Doc based on a String payload
@@ -84,12 +86,59 @@ class DbHelper {
     if (p.length == 2) {
       Database db = await this.db;
       var r = await db.rawQuery(
-        "SELECT * FROM $tblDocs WHERE $docId = ${p[0]} AND $docExpiration = '${p[1]}'" );
+        "SELECT * FROM $tblDocs WHERE $docId = ${p[0]} AND $docExpiration = '${p[1]}'"
+      );
       return r;
     }
     else {
       return null;
     }
   }
+
+  // Get the number of docs.
+  Future<int?> getDocsCount() async {
+    Database db = await this.db;
+    var r = Sqflite.firstIntValue(
+      await db.rawQuery(
+        "SELECT COUNT(*) FROM $tblDocs"
+      )
+    );
+    return r;
+    }
+    // Get the max document id available on the database.
+    Future<int?> getMaxId() async {
+    Database db = await this.db;
+    var r = Sqflite.firstIntValue(
+    await db.rawQuery(
+      "SELECT MAX(id) FROM $tblDocs")
+    );
+    return r;
+  }
+
+  // Update a doc.
+  Future<int> updateDoc(Doc doc) async {
+    var db = await this.db;
+    var r = await db.update(
+      tblDocs, doc.toMap(), where: "$docId = ?", whereArgs: [doc.id]
+    );
+    return r;
+    }
+    // Delete a doc.
+    Future<int> deleteDoc(int id) async {
+    var db = await this.db;
+    int r = await db.rawDelete(
+      "DELETE FROM $tblDocs WHERE $docId = $id"
+    );
+    return r;
+    }
+    // Delete all docs.
+    Future<int> deleteRows(String tbl) async {
+    var db = await this.db;
+    int r = await db.rawDelete(
+      "DELETE FROM $tbl"
+    );
+    return r;
+  }
+ 
 
 }

@@ -1,17 +1,17 @@
 // ignore_for_file: unnecessary_null_comparison, prefer_collection_literals
 
-import 'package:document_expire/util/util.dart';
+import 'package:document_expire/util/utils.dart';
 
 class Doc
 {
-  int id;
-  String title;
-  String expiration;
+  int? id;
+  String? title;
+  String? expiration;
   
-  int fqYear;
-  int fqHalfYear;
-  int fqQuarter;
-  int fqMonth;
+  int? fqYear;
+  int? fqHalfYear;
+  int? fqQuarter;
+  int? fqMonth;
   
   Doc(this.title, this.expiration, this.fqYear,
   this.fqHalfYear, this.fqQuarter, this.fqMonth);
@@ -33,6 +33,7 @@ class Doc
     }
     return map;
   }
+
  Doc.fromObject(dynamic o) {
    id = o["id"];
    title = o["title"];
