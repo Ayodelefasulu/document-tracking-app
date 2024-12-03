@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_declarations, must_be_immutable, unused_element, unused_field
+// ignore_for_file: prefer_const_declarations, must_be_immutable, unused_element, unused_field, await_only_futures, use_build_context_synchronously, unused_local_variable
 
 import 'dart:async';
 import 'package:flutter/material.dart' hide DateUtils;
@@ -70,14 +70,54 @@ class DocDetailState extends State<DocDetail> {
       initialDate.isAfter(now) ? initialDate : now);
       DatePicker.showDatePicker(context, showTitleActions: true,
       onConfirm: (date) {
-      setState(() {
-      DateTime dt = date;
-      String r = DateUtils.ftDateAsStr(dt);
-      expirationCtrl.text = r;
-      });
+        setState(() {
+          DateTime dt = date;
+          String r = DateUtils.ftDateAsStr(dt);
+          expirationCtrl.text = r;
+        });
       },
       currentTime: initialDate);
-    } 
+    }
+
+    // Upper Menu
+    void _selectMenu(String value) async {
+      switch (value) {
+        case menuDelete:
+          if (widget.doc.id == -1) {
+            return;
+          }
+        await _deleteDoc??(widget.doc.id!);
+      }
+    }
+    // Delete doc
+    void _deleteDoc(int id) async {
+      int? r = await widget.dbh.deleteDoc(widget.doc.id!);
+      Navigator.pop(context, true);
+    }
+
+    // Save doc
+    void _saveDoc() {
+      widget.doc.title = titleCtrl.text;
+      widget.doc.expiration = expirationCtrl.text;
+      widget.doc.fqYear = Val.BoolToInt(fqYearCtrl);
+      widget.doc.fqHalfYear = Val.BoolToInt(fqHalfYearCtrl);
+      widget.doc.fqQuarter = Val.BoolToInt(fqQuarterCtrl);
+      widget.doc.fqMonth = Val.BoolToInt(fqMonthCtrl);
+      if (widget.doc.id! > -1) {
+        debugPrint("_update->Doc Id: ${widget.doc.id}");
+        widget.dbh.updateDoc(widget.doc);
+        Navigator.pop(context, true);
+      }
+      else {
+        Future<int?> idd = widget.dbh.getMaxId();
+        idd.then((result) {
+          debugPrint("_insert->Doc Id: ${widget.doc.id}");
+          widget.doc.id = (result != null) ? result + 1 : 1;
+          widget.dbh.insertDoc(widget.doc);
+          Navigator.pop(context, true);
+        });
+      }
+    }
   
   @override
   Widget build(BuildContext context) {
