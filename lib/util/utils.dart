@@ -63,6 +63,7 @@ class DateUtils {
   static bool isDate(String dt) {
     try
     {
+      // ignore: unused_local_variable
       var d = new DateFormat("yyyy-MM-dd").parseStrict(dt);
       return true;
     } catch (e) {
