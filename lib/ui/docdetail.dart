@@ -167,7 +167,8 @@ class DocDetailState extends State<DocDetail> {
         ]
       ),
       body: Form(
-        autovalidateMode: AutovalidateMode.always, key: _formKey,
+        autovalidateMode: AutovalidateMode.always,
+        key: _formKey,
         child: SafeArea(
           top: false,
           bottom: false,
