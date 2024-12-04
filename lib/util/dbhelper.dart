@@ -1,6 +1,6 @@
 // ignore_for_file: unused_field, prefer_conditional_assignment, unnecessary_null_comparison, unused_import
 
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide DatePickerTheme;
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:async';

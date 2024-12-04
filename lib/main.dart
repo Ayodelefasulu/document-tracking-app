@@ -13,7 +13,7 @@ class DocExpiryApp extends StatelessWidget
       theme: new ThemeData(
         primarySwatch: Colors.indigo,
       ),
-      home: DocList(),
+      home: const DocList(),
     );
   }
 }

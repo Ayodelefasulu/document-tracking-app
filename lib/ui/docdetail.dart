@@ -1,7 +1,7 @@
 // ignore_for_file: prefer_const_declarations, must_be_immutable, unused_element, unused_field, await_only_futures, use_build_context_synchronously, unused_local_variable, prefer_const_constructors, non_constant_identifier_names, unnecessary_import
 
 import 'dart:async';
-import 'package:flutter/material.dart' hide DateUtils;
+import 'package:flutter/material.dart' hide DateUtils, DatePickerTheme;
 import 'package:flutter/services.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
@@ -175,7 +175,7 @@ class DocDetailState extends State<DocDetail> {
           child: ListView(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             children: <Widget>[
-              TextFormField (
+              TextFormField(
                 inputFormatters: [
                   WhitelistingTextInputFormatter(
                     RegExp("[a-zA-Z0-9 ]"))
