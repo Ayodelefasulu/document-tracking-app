@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide DatePickerTheme;
 import './ui/doclist.dart';
 void main() => runApp(const DocExpiryApp());
 class DocExpiryApp extends StatelessWidget

@@ -1,10 +1,11 @@
-// ignore_for_file: prefer_const_declarations, must_be_immutable, unused_element, unused_field, await_only_futures, use_build_context_synchronously, unused_local_variable, prefer_const_constructors, non_constant_identifier_names, unnecessary_import
+// ignore_for_file: prefer_const_declarations, must_be_immutable, unused_element, unused_field, await_only_futures, use_build_context_synchronously, unused_local_variable, prefer_const_constructors, non_constant_identifier_names, unnecessary_import, undefined_hidden_name
 
 import 'dart:async';
 import 'package:flutter/material.dart' hide DateUtils, DatePickerTheme;
 import 'package:flutter/services.dart';
-import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:flutter_masked_text2/flutter_masked_text2.dart';
+//import 'package:flutter_datetime_picker/flutter_datetime_picker.dart' as picker;
 import '../model/model.dart';
 import '../util/utils.dart';
 import '../util/dbhelper.dart';
@@ -68,15 +69,17 @@ class DocDetailState extends State<DocDetail> {
       var initialDate = DateUtils.convertToDate(initialDateString) ?? now;
       initialDate = (initialDate.year >= now.year &&
       initialDate.isAfter(now) ? initialDate : now);
-      DatePicker.showDatePicker(context, showTitleActions: true,
-      onConfirm: (date) {
-        setState(() {
-          DateTime dt = date;
-          String r = DateUtils.ftDateAsStr(dt);
-          expirationCtrl.text = r;
-        });
-      },
-      currentTime: initialDate);
+      DatePicker.showDatePicker(
+        context,
+        showTitleActions: true,
+        onConfirm: (date) {
+          setState(() {
+            DateTime dt = date;
+            String r = DateUtils.ftDateAsStr(dt);
+            expirationCtrl.text = r;
+          });
+        },
+        currentTime: initialDate);
     }
 
   // Upper Menu
@@ -86,7 +89,7 @@ class DocDetailState extends State<DocDetail> {
         if (widget.doc.id == -1) {
           return;
         }
-      await _deleteDoc;
+      _deleteDoc(widget.doc.id!);
     }
   }
   // Delete doc
