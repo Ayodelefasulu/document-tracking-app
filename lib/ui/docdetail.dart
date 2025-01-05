@@ -12,15 +12,13 @@ import '../util/dbhelper.dart';
 
 // Menu item
 const menuDelete = "Delete";
-final List<String> menuOptions = const <String> [
- menuDelete
-];
+final List<String> menuOptions = const <String>[menuDelete];
 
 class DocDetail extends StatefulWidget {
   Doc doc;
   final DbHelper dbh = DbHelper();
   DocDetail(this.doc, {super.key});
-  
+
   @override
   State<StatefulWidget> createState() => DocDetailState();
 }
@@ -30,8 +28,8 @@ class DocDetailState extends State<DocDetail> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final int daysAhead = 5475; // 15 years in the future.
   final TextEditingController titleCtrl = TextEditingController();
-  final TextEditingController expirationCtrl = MaskedTextController(
-  mask: '2000-00-00');
+  final TextEditingController expirationCtrl =
+      MaskedTextController(mask: '2000-00-00');
   bool fqYearCtrl = true;
   bool fqHalfYearCtrl = true;
   bool fqQuarterCtrl = true;
@@ -63,24 +61,21 @@ class DocDetailState extends State<DocDetail> {
   }
 
   // Date Picker & Date function
-  Future _chooseDate(BuildContext context, String initialDateString) 
-    async {
-      var now = new DateTime.now();
-      var initialDate = DateUtils.convertToDate(initialDateString) ?? now;
-      initialDate = (initialDate.year >= now.year &&
-      initialDate.isAfter(now) ? initialDate : now);
-      DatePicker.showDatePicker(
-        context,
-        showTitleActions: true,
+  Future _chooseDate(BuildContext context, String initialDateString) async {
+    var now = new DateTime.now();
+    var initialDate = DateUtils.convertToDate(initialDateString) ?? now;
+    initialDate = (initialDate.year >= now.year && initialDate.isAfter(now)
+        ? initialDate
+        : now);
+    DatePicker.showDatePicker(context, showTitleActions: true,
         onConfirm: (date) {
-          setState(() {
-            DateTime dt = date;
-            String r = DateUtils.ftDateAsStr(dt);
-            expirationCtrl.text = r;
-          });
-        },
-        currentTime: initialDate);
-    }
+      setState(() {
+        DateTime dt = date;
+        String r = DateUtils.ftDateAsStr(dt);
+        expirationCtrl.text = r;
+      });
+    }, currentTime: initialDate);
+  }
 
   // Upper Menu
   void _selectMenu(String value) async {
@@ -89,9 +84,10 @@ class DocDetailState extends State<DocDetail> {
         if (widget.doc.id == -1) {
           return;
         }
-      _deleteDoc(widget.doc.id!);
+        _deleteDoc(widget.doc.id!);
     }
   }
+
   // Delete doc
   void _deleteDoc(int id) async {
     int? r = await widget.dbh.deleteDoc(widget.doc.id!);
@@ -110,8 +106,7 @@ class DocDetailState extends State<DocDetail> {
       debugPrint("_update->Doc Id: ${widget.doc.id}");
       widget.dbh.updateDoc(widget.doc);
       Navigator.pop(context, true);
-    }
-    else {
+    } else {
       Future<int?> idd = widget.dbh.getMaxId();
       idd.then((result) {
         debugPrint("_insert->Doc Id: ${widget.doc.id}");
@@ -131,20 +126,23 @@ class DocDetailState extends State<DocDetail> {
       _saveDoc();
     }
   }
-  void showMessage(BuildContext context, String message, [MaterialColor color = Colors.red]) { 
-    ScaffoldMessenger.of(context).showSnackBar( 
-      SnackBar( 
-        backgroundColor: color, content: Text(message), 
-      ), 
+
+  void showMessage(BuildContext context, String message,
+      [MaterialColor color = Colors.red]) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: color,
+        content: Text(message),
+      ),
     );
   }
-  
+
   @override
   void initState() {
     super.initState();
     _initCtrls();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     const String cStrDays = "Enter a number of days";
@@ -154,21 +152,22 @@ class DocDetailState extends State<DocDetail> {
       key: _scaffoldKey,
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: Text(ttl != "" ? widget.doc.title! : "New Document"),
-        actions: (ttl == "") ? <Widget>[]: <Widget>[
-          PopupMenuButton(
-            onSelected: _selectMenu,
-            itemBuilder: (BuildContext context) {
-              return menuOptions.map((String choice) {
-                return PopupMenuItem<String>(
-                  value: choice,
-                  child: Text(choice),
-                );
-              }).toList();
-            },
-          ),
-        ]
-      ),
+          title: Text(ttl != "" ? widget.doc.title! : "New Document"),
+          actions: (ttl == "")
+              ? <Widget>[]
+              : <Widget>[
+                  PopupMenuButton(
+                    onSelected: _selectMenu,
+                    itemBuilder: (BuildContext context) {
+                      return menuOptions.map((String choice) {
+                        return PopupMenuItem<String>(
+                          value: choice,
+                          child: Text(choice),
+                        );
+                      }).toList();
+                    },
+                  ),
+                ]),
       body: Form(
         autovalidateMode: AutovalidateMode.always,
         key: _formKey,
@@ -180,8 +179,7 @@ class DocDetailState extends State<DocDetail> {
             children: <Widget>[
               TextFormField(
                 inputFormatters: [
-                  WhitelistingTextInputFormatter(
-                    RegExp("[a-zA-Z0-9 ]"))
+                  WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9 ]"))
                 ],
                 controller: titleCtrl,
                 style: tStyle,
@@ -194,17 +192,18 @@ class DocDetailState extends State<DocDetail> {
               ),
               Row(children: <Widget>[
                 Expanded(
-                  child: TextFormField(
-                    controller: expirationCtrl,
-                    maxLength: 10,
-                    decoration: InputDecoration(
+                    child: TextFormField(
+                  controller: expirationCtrl,
+                  maxLength: 10,
+                  decoration: InputDecoration(
                       icon: const Icon(Icons.calendar_today),
-                      hintText: 'Expiry date (i.e. ${DateUtils.daysAheadAsStr(daysAhead)})',
-                      labelText: 'Expiry Date'
-                    ),
-                    keyboardType: TextInputType.number,
-                    validator: (val) => DateUtils.isValidDate(val!) 
-                      ? null : 'Not a valid future date',
+                      hintText:
+                          'Expiry date (i.e. ${DateUtils.daysAheadAsStr(daysAhead)})',
+                      labelText: 'Expiry Date'),
+                  keyboardType: TextInputType.number,
+                  validator: (val) => DateUtils.isValidDate(val!)
+                      ? null
+                      : 'Not a valid future date',
                 )),
                 IconButton(
                   icon: new Icon(Icons.more_horiz),
@@ -214,64 +213,59 @@ class DocDetailState extends State<DocDetail> {
                   }),
                 )
               ]),
-              Row(children: const <Widget>[
-                Expanded(child: Text(' '))
-              ]),
+              Row(children: const <Widget>[Expanded(child: Text(' '))]),
               Row(children: <Widget>[
                 Expanded(child: Text('a: Alert @ 1.5 & 1 year(s)')),
                 Switch(
-                  value: fqYearCtrl,
-                  onChanged: (bool value) {
-                    setState(() {
-                      fqYearCtrl = value;
-                    });  
-                  }
-                ),
+                    value: fqYearCtrl,
+                    onChanged: (bool value) {
+                      setState(() {
+                        fqYearCtrl = value;
+                      });
+                    }),
               ]),
               Row(children: <Widget>[
                 Expanded(child: Text('b: Alert @ 6 months')),
                 Switch(
-                  value: fqHalfYearCtrl,
-                  onChanged: (bool value) {
-                    setState(() {
-                      fqHalfYearCtrl = value;
-                    });
-                  }),
+                    value: fqHalfYearCtrl,
+                    onChanged: (bool value) {
+                      setState(() {
+                        fqHalfYearCtrl = value;
+                      });
+                    }),
               ]),
               Row(children: <Widget>[
                 Expanded(child: Text('c: Alert @ 3 months')),
                 Switch(
-                  value: fqQuarterCtrl,
-                  onChanged: (bool value) {
-                    setState(() {
-                      fqQuarterCtrl = value;
-                    });
-                  }),
+                    value: fqQuarterCtrl,
+                    onChanged: (bool value) {
+                      setState(() {
+                        fqQuarterCtrl = value;
+                      });
+                    }),
               ]),
               Row(children: <Widget>[
                 Expanded(child: Text('d: Alert @ 1 month or less')),
                 Switch(
-                  value: fqMonthCtrl,
-                  onChanged: (bool value) {
-                    setState(() {
-                      fqMonthCtrl = value;
-                    });
-                  }),
+                    value: fqMonthCtrl,
+                    onChanged: (bool value) {
+                      setState(() {
+                        fqMonthCtrl = value;
+                      });
+                    }),
               ]),
               Container(
-                padding: const EdgeInsets.only(
-                  left: 40.0, top: 20.0),
-                child: ElevatedButton(
-                  onPressed: _submitForm,
-                  child: Text("Save"),
-                )
-              ),
+                  padding: const EdgeInsets.only(left: 40.0, top: 20.0),
+                  child: ElevatedButton(
+                    onPressed: _submitForm,
+                    child: Text("Save"),
+                  )),
             ],
           ),
         ),
       ),
     );
   }
-  
+
   WhitelistingTextInputFormatter(RegExp regExp) {}
 }
